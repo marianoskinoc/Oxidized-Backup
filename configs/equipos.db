@@ -1,0 +1,6 @@
+# Formato: name:ip:model:username:password:enable_password
+# Equipos identificados en el monitoreo Zabbix
+sc_mkt_ypf:192.168.60.15:ios:admin:admin:admin
+# Agregar más equipos según sea necesario
+# switch_example:192.168.1.100:ios:admin:password:enable
+# router_example:192.168.1.1:ios:admin:password:enable

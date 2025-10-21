@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2025-10-21T15:30:00Z</date>
+    <groups>
+        <group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates/Applications</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>a571c0d144b544b7bb9928f3cd4cc662</uuid>
+            <template>Template Oxidized Backup System</template>
+            <name>Template Oxidized Backup System</name>
+            <description>Template para monitorear el sistema de backup de configuraciones Oxidized.
+
+Monitorea:
+- Estado del servicio Oxidized
+- Última ejecución de backup
+- Número de dispositivos configurados
+- Disponibilidad de API REST
+- Estado general de backups
+
+Autor: marianoskinoc
+Fecha: 2025-10-21</description>
+            <groups>
+                <group>
+                    <name>Templates/Applications</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>b9c6a6bc9c444b3892b5c6d8f3e21a49</uuid>
+                    <name>Oxidized Service Status</name>
+                    <key>oxidized.service.status</key>
+                    <delay>30s</delay>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <value_type>UNSIGNED</value_type>
+                    <description>Estado del servicio Oxidized (1=activo, 0=inactivo)</description>
+                    <valuemap>
+                        <name>Service state</name>
+                    </valuemap>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Oxidized</value>
+                        </tag>
+                        <tag>
+                            <tag>Component</tag>
+                            <value>Service</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>c8d7b7cd8d554c4a93c6d7e9f4f32b5a</uuid>
+                    <name>Oxidized Devices Count</name>
+                    <key>oxidized.devices.count</key>
+                    <delay>5m</delay>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <value_type>UNSIGNED</value_type>
+                    <description>Número de dispositivos configurados para backup</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Oxidized</value>
+                        </tag>
+                        <tag>
+                            <tag>Component</tag>
+                            <value>Configuration</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>d9e8c8de9e664d5ba4d7e8faf5a43c6b</uuid>
+                    <name>Oxidized API Availability</name>
+                    <key>oxidized.api.available</key>
+                    <delay>1m</delay>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <value_type>UNSIGNED</value_type>
+                    <description>Disponibilidad de la API REST de Oxidized (1=disponible, 0=no disponible)</description>
+                    <valuemap>
+                        <name>Service state</name>
+                    </valuemap>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Oxidized</value>
+                        </tag>
+                        <tag>
+                            <tag>Component</tag>
+                            <value>API</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>eaf9d9efaf774e6cb5e8f9gbg6b54d7c</uuid>
+                    <name>Oxidized Last Backup Timestamp</name>
+                    <key>oxidized.last.backup</key>
+                    <delay>5m</delay>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <value_type>UNSIGNED</value_type>
+                    <units>unixtime</units>
+                    <description>Timestamp del último backup exitoso en formato Unix</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Oxidized</value>
+                        </tag>
+                        <tag>
+                            <tag>Component</tag>
+                            <value>Backup</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>fba0eaf0ba884f7dc6f9ga0hb7c65e8d</uuid>
+                    <name>Oxidized Backup Status</name>
+                    <key>oxidized.backup.status</key>
+                    <delay>5m</delay>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <value_type>UNSIGNED</value_type>
+                    <description>Estado de los backups (0=sin backups, 1=backup reciente, 2=backup antiguo)</description>
+                    <valuemap>
+                        <name>Oxidized backup status</name>
+                    </valuemap>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Oxidized</value>
+                        </tag>
+                        <tag>
+                            <tag>Component</tag>
+                            <value>Backup</value>
+                        </tag>
+                    </tags>
+                </item>
+            </items>
+            <triggers>
+                <trigger>
+                    <uuid>abc1def2345678901234567890abcdef</uuid>
+                    <expression>last(/Template Oxidized Backup System/oxidized.service.status)=0</expression>
+                    <name>Oxidized service is down</name>
+                    <priority>HIGH</priority>
+                    <description>El servicio Oxidized no está ejecutándose</description>
+                    <tags>
+                        <tag>
+                            <tag>scope</tag>
+                            <value>availability</value>
+                        </tag>
+                    </tags>
+                </trigger>
+                <trigger>
+                    <uuid>bcd2efa3456789012345678901bcdefg</uuid>
+                    <expression>last(/Template Oxidized Backup System/oxidized.backup.status)=0</expression>
+                    <name>Oxidized: No backups found</name>
+                    <priority>WARNING</priority>
+                    <description>No se han encontrado backups en el repositorio Git de Oxidized</description>
+                    <tags>
+                        <tag>
+                            <tag>scope</tag>
+                            <value>performance</value>
+                        </tag>
+                    </tags>
+                </trigger>
+                <trigger>
+                    <uuid>cde3fab4567890123456789012cdefab</uuid>
+                    <expression>last(/Template Oxidized Backup System/oxidized.backup.status)=2</expression>
+                    <name>Oxidized: Backup is outdated</name>
+                    <priority>WARNING</priority>
+                    <description>El último backup tiene más de 2 horas de antigüedad</description>
+                    <tags>
+                        <tag>
+                            <tag>scope</tag>
+                            <value>performance</value>
+                        </tag>
+                    </tags>
+                </trigger>
+                <trigger>
+                    <uuid>def4gbc5678901234567890123defabc</uuid>
+                    <expression>last(/Template Oxidized Backup System/oxidized.api.available)=0</expression>
+                    <name>Oxidized API is not available</name>
+                    <priority>AVERAGE</priority>
+                    <description>La API REST de Oxidized no está respondiendo en el puerto 8888</description>
+                    <tags>
+                        <tag>
+                            <tag>scope</tag>
+                            <value>availability</value>
+                        </tag>
+                    </tags>
+                </trigger>
+            </triggers>
+            <valuemaps>
+                <valuemap>
+                    <uuid>123456789012345678901234567890ab</uuid>
+                    <name>Service state</name>
+                    <mappings>
+                        <mapping>
+                            <value>0</value>
+                            <newvalue>Down</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>Up</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>234567890123456789012345678901bc</uuid>
+                    <name>Oxidized backup status</name>
+                    <mappings>
+                        <mapping>
+                            <value>0</value>
+                            <newvalue>No backups</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>Recent backup</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>Outdated backup</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+            </valuemaps>
+        </template>
+    </templates>
+</zabbix_export>

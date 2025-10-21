@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>7.4</version>
+    <template_groups>
+        <template_group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates/Applications</name>
+        </template_group>
+    </template_groups>
+    <templates>
+        <template>
+            <uuid>a571c0d144b544b7bb9928f3cd4cc662</uuid>
+            <template>Template Oxidized Backup System</template>
+            <name>Template Oxidized Backup System</name>
+            <description>Template para monitorear Oxidized</description>
+            <template_groups>
+                <template_group>
+                    <name>Templates/Applications</name>
+                </template_group>
+            </template_groups>
+            <items>
+                <item>
+                    <uuid>b9c6a6bc9c444b3892b5c6d8f3e21a49</uuid>
+                    <name>Oxidized Service Status</name>
+                    <key>oxidized.service.status</key>
+                    <delay>30s</delay>
+                    <value_type>UNSIGNED</value_type>
+                    <description>Estado del servicio Oxidized</description>
+                </item>
+            </items>
+        </template>
+    </templates>
+</zabbix_export>

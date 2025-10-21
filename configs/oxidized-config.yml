@@ -1,0 +1,52 @@
+---
+username: admin
+password: admin
+model: junos
+resolve_dns: false
+interval: 3600
+use_syslog: false
+debug: false
+threads: 30
+timeout: 20
+retries: 3
+prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
+next_adds_job: false
+vars: {}
+groups: {}
+rest: 127.0.0.1:8888
+pid: /var/lib/oxidized/oxidized.pid
+
+input:
+  default: ssh, telnet
+  debug: false
+  ssh:
+    secure: false
+
+output:
+  default: git
+  git:
+    user: Oxidized
+    email: oxidized@oxidized.local
+    repo: /var/lib/oxidized/oxidized.git
+
+source:
+  default: csv
+  csv:
+    file: /var/lib/oxidized/.config/oxidized/router.db
+    delimiter: !ruby/regexp /:/
+    map:
+      name: 0
+      ip: 1
+      model: 2
+      username: 3
+      password: 4
+    vars_map:
+      enable: 5
+
+model_map:
+  cisco: ios
+  juniper: junos
+  huawei: vrp
+  hp: procurve
+  mikrotik: routeros
+  ubiquiti: airos

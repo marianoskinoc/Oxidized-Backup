@@ -1,0 +1,48 @@
+# Archivos de configuración local
+*.local
+*.tmp
+*.bak
+
+# Credenciales y contraseñas
+router.db
+credentials.*
+passwords.*
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Repositorio Git de Oxidized (contiene configuraciones sensibles)
+oxidized.git/
+
+# Archivos de backup
+*.backup
+backup_*
+
+# Archivos de certificados y llaves
+*.key
+*.pem
+*.crt
+*.p12
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# Archivos compilados Ruby
+*.gem
+*.rbc
+
+# Directorio de instalaciones locales
+/vendor/
