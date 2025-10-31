@@ -30,80 +30,80 @@ Oxidized es una herramienta moderna de backup de configuraciones de equipos de r
 
 ## 🎯 Características Implementadas
 
-### ✅ Funcionalidades Activas
-- **Backup automático** cada hora de configuraciones
-- **Versionado Git** para tracking de cambios
-- **API REST** en puerto 8888 para integración
-- **Soporte multi-vendor** (Cisco, HP, Mikrotik, etc.)
-- **Servicio systemd** para alta disponibilidad
+Oxidized-Backup
+===============
 
-### 🔧 Configuración Actual
+Este repositorio contiene documentación y modelos personalizados para Oxidized.
 
-| Parámetro | Valor |
-|-----------|-------|
-| **Intervalo de backup** | 3600 segundos (1 hora) |
-| **Puerto API REST** | 8888 |
-| **Repositorio Git** | /var/lib/oxidized/oxidized.git |
-| **Timeout conexión** | 20 segundos |
-| **Reintentos** | 3 |
-| **Threads** | 30 |
+Archivos importantes
+-------------------
+- `docs/AGREGAR_TPLINK.md` - Guía paso a paso para añadir un TP-Link (onboarding).
+- `docs/AGREGAR_TPLINK_VARIANTES.md` - Casos especiales y variantes.
+- `models/tplink.rb` - Modelo TP-Link personalizado (versionado aquí para evitar sobrescrituras del gem).
+- `CHANGES.md` - Registro de cambios aplicados.
+- Runtime config de Oxidized en la VM: `/var/lib/oxidized/.config/oxidized/config` (ahora apunta a `models_dir: /root/Proxmox/Oxidized-Backup/models`).
 
-## 📋 Equipos Configurados
+Cómo agregar más equipos TP-Link rápidamente
+-------------------------------------------
+1) Decide un nombre para el equipo (sin espacios). Recomiendo usar el patrón `tplink-<ubicacion>-<unidad>` o `sd<loc>_tpl_<id>`; en este repo usamos `sd2_tpl_itPB`.
 
-### Equipos Actuales
-- **sc_mkt_ypf** (192.168.60.15) - Switch Cisco IOS
-  - Detectado desde monitoreo Zabbix
-  - Estado: Configurado para backup
+2) Añade una línea en el archivo runtime `router.db` usado por Oxidized (por defecto en `/var/lib/oxidized/.config/oxidized/router.db`) con el formato:
 
-### Próximos a Agregar
-- PBS Server management interface
-- QNAP NAS management interface
-- Otros switches y routers de la red
+  `name:ip:model:username:password:group`
 
-## 🚀 Instalación Completada
+  Ejemplo:
 
-### Dependencias Instaladas
-- ✅ Ruby 3.1.2
-- ✅ Oxidized 0.34.3
-- ✅ Oxidized-web 0.17.1
-- ✅ Git para versionado
-- ✅ Todas las librerías de desarrollo necesarias
+  `sd3_tpl_oficina:192.168.60.37:tplink:oxidized:2ECSx4u&kh+GyA5H:tplink-sw`
 
-### Servicios Configurados
-- ✅ Usuario del sistema `oxidized`
-- ✅ Servicio systemd habilitado
-- ✅ Repositorio Git inicializado
-- ✅ Configuración base establecida
+  - `model` debe ser `tplink` (mapeado a `TPLink` en `config`)
+  - `group` debe ser `tplink-sw` para heredar las variables (ssh_kex, enable, etc.)
 
-## 🔗 Integración con Zabbix
+3) Forzar fetch para probar inmediatamente:
 
-### Funciones de Integración
-1. **Discovery automático** de equipos desde Zabbix
-2. **Alertas de backup** fallidos via Zabbix
-3. **Métricas de estado** de backups
-4. **Correlación de eventos** entre cambios y problemas
-
-### API REST Endpoints
-- `GET http://localhost:8888/` - Estado general
-- `GET http://localhost:8888/nodes` - Lista de equipos
-- `GET http://localhost:8888/node/show/{name}` - Última configuración
-- `POST http://localhost:8888/node/next/{name}` - Forzar backup
-
-## �� Comandos Útiles
-
-### Gestión del Servicio
 ```bash
-# Iniciar servicio
-systemctl start oxidized
+curl -sS http://127.0.0.1:8888/node/fetch/tplink-sw/<name>
+```
 
-# Verificar estado
-systemctl status oxidized
+4) Verificar raw:
 
-# Ver logs
-journalctl -u oxidized -f
+```bash
+curl -sS http://127.0.0.1:8888/node/fetch/tplink-sw/<name>
+```
 
-# Reiniciar servicio
-systemctl restart oxidized
+Si la captura falla, revisar logs:
+
+```bash
+journalctl -u oxidized -n 200 --no-pager
+```
+
+Añadir múltiples IPs desde aquí
+------------------------------
+Si me compartís la lista de IPs (o nombres+IPs) puedo agregarlas yo al `router.db`, commitear los cambios en este repo y pushearlos a GitHub.
+
+Información de credenciales
+---------------------------
+- Si todos los equipos usan el mismo `username` y `password`, los agrego con esos valores.
+- Si algún equipo tiene `enable` con contraseña distinta, indicalo y lo pondré en `groups` o a nivel de nodo según prefieras.
+
+Ejemplo de flujo (automatizado que puedo ejecutar por vos):
+1. Añadir entradas a `/var/lib/oxidized/.config/oxidized/router.db`.
+2. Forzar fetch de cada node para validar.
+3. Commitear el `router.db` al repo (opcional) y pushear a GitHub.
+
+Privacidad y seguridad
+----------------------
+- Las credenciales quedan en el config runtime y en `router.db` (si lo comiteas). Si vas a versionar `router.db` considera encriptar/ocultar contraseñas o mantener el archivo fuera del repo.
+
+¿Querés que agregue las IPs ahora? Si es así, pegá la lista en el siguiente formato (una por línea):
+
+`<name>:<ip>`
+
+Por ejemplo:
+
+`sd3_tpl_oficina:192.168.60.37`
+`sd4_tpl_bodega:192.168.60.38`
+
+Si preferís, solo pega las IPs y propongo nombres automáticos (por ejemplo `tplink-<último-octeto>`).
 ```
 
 ### Operaciones Manuales
